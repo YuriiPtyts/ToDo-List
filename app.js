@@ -3,9 +3,10 @@ const addButton = document.querySelector(".add-button");
 const tasksContainer = document.querySelector(".tasks-container");
 const tasksRemaining = document.querySelector(".tasks-remaining");
 const tasksAmount = document.querySelector(".tasks-amount");
+let tasksArr = [];
 
 let tasksCounter = 0;
-let buttonId = 0;
+let taskId = 0;
 
 // const task = searchBarInput.value;
 
@@ -53,32 +54,42 @@ function toDo(task) {
     }
     let newDiv = document.createElement("div");
     newDiv.className = "task";
-    newDiv.id = `task${++buttonId}`
+    newDiv.id = `task${++taskId}`
     tasksContainer.appendChild(newDiv);
 
     let newCheckbox = document.createElement("input");
     newCheckbox.type = "checkbox";
     newCheckbox.className = "checkbox";
-    newCheckbox.id = `checkbox${buttonId}`;
+    newCheckbox.id = `checkbox${taskId}`;
     newDiv.appendChild(newCheckbox);
 
-    
+    const newTask = {
+        id: taskId,
+        task: task
+    };
+
+    tasksArr.push(newTask);
+    console.log(tasksArr);
 
     let newLabel = document.createElement("label");
-    newLabel.id = `label${buttonId}`;
-    newLabel.htmlFor = `checkbox${buttonId}`;
+    newLabel.id = `label${taskId}`;
+    newLabel.htmlFor = `checkbox${taskId}`;
     newLabel.appendChild(document.createTextNode(task));
     newDiv.appendChild(newLabel);
 
     let newDeleteButton = document.createElement("button");
     newDeleteButton.className = "delete-button";
-    newDeleteButton.id =`deleteButton${buttonId}`;
+    newDeleteButton.id =`deleteButton${taskId}`;
     newDeleteButton.innerText = "X";
     newDiv.appendChild(newDeleteButton);
 
-    let deleteButton = document.querySelector(`#deleteButton${buttonId}`);
+    let deleteButton = document.querySelector(`#deleteButton${taskId}`);
     deleteButton.addEventListener("click", ()=> {
         newDiv.remove();
+
+        const deleteButtonId =getId(deleteButton);
+        taskObjectDelete(deleteButtonId);
+
         tasksCounter--;
         changeRemaining();
 
@@ -91,8 +102,8 @@ function toDo(task) {
         }
     });
 
-    let checkbox = document.querySelector(`#checkbox${buttonId}`);
-    let label = document.querySelector(`#label${buttonId}`);
+    let checkbox = document.querySelector(`#checkbox${taskId}`);
+    let label = document.querySelector(`#label${taskId}`);
     checkbox.addEventListener('change', (event) => {
         if (event.target.checked) {
             label.style.textDecoration = "line-through";
@@ -106,10 +117,14 @@ function changeRemaining() {
     tasksRemaining.textContent = `${tasksCounter} tasks remaining`;
 }
 
-// function getId(object) {
-//     const fullId = object.id;
-//     const idNumberAsObject = fullId.match(/\d+\.?\d*/g);
-//     const idNumber = idNumberAsObject.toString();
-//     console.log(idNumber);
-// }
+function taskObjectDelete(taskId) {
+    tasksArr = tasksArr.filter(taskInArr => taskInArr.id !== taskId);
+}
+
+function getId(object) {
+    const fullId = object.id;
+    const idNumberAsObject = fullId.match(/\d+\.?\d*/g);
+    const idNumber = idNumberAsObject.toString();
+    return Number(idNumber);
+}
 
