@@ -92,7 +92,7 @@ function toDo(task) {
     if(!(tasksArr.some(task => task.id == taskObjectId))){
         const newTask = {
             id: taskId,
-            taskName: taskObjectTask || task,
+            taskName: task,
             completed: false
         };
         tasksArr.push(newTask);
